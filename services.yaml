@@ -1,0 +1,18 @@
+play_galatz_news:
+  name: Play the Galatz lastest hourly news
+  description: Choose media player and start the Galatz lastest hourly news
+  target:
+    entity:
+      domain: media_player
+play_channel_11:
+  name: Play Channel 11
+  description: Choose media player and start the Galatz lastest hourly news
+  target:
+    entity:
+      domain: media_player
+play_channel_12:
+  name: Play Channel 12
+  description: Choose media player and start the Galatz lastest hourly news
+  target:
+    entity:
+      domain: media_player
