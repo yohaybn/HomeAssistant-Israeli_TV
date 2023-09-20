@@ -2,7 +2,7 @@
 HomeAssistant integration for Israeli TV channels
 ## Installation
 
-Installation via [HACS](https://hacs.xyz/) (recommended) or by copying files to `custom_components/israeli_tv` in your Home Assistant configuration directory.
+Installation via [HACS](https://hacs.xyz/) (recommended) or by copying  `custom_components/israeli_tv` into your Home Assistant configuration directory.
 
 ## Configuration
 
