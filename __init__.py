@@ -45,10 +45,12 @@ async def async_setup(hass, config):
                 service_data = {
                     "entity_id": media_player_entity_id,
                     "media_content_id": url,
-                    "media_content_type": "channel",
+                    "media_content_type": "video",
                 }
                 _LOGGER.debug(service_data)
-                hass.services.call("media_player", "play_media", service_data)
+                hass.async_create_task(
+                    hass.services.async_call("media_player", "play_media", service_data)
+                )
         except aiohttp.ClientError as error:
             _LOGGER.error(
                 "Error while retrieving package data for  track_packages: %s", error
