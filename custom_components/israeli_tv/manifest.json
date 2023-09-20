@@ -1,11 +1,11 @@
 {
     "domain": "israeli_tv",
     "name": "Israeli TV",
-    "config_flow": false,
-    "documentation": "https://github.com/yohaybn/HomeAssistant-israeli_tv",
-    "issue_tracker": "https://github.com/yohaybn/HomeAssistant-israeli_tv/issues",
-    "iot_class": "cloud_polling",
     "codeowners": ["@yohaybn"],
-    "version": "1.0.0",
-    "requirements": []
+    "documentation": "https://github.com/yohaybn/HomeAssistant-israeli_tv",
+    "iot_class": "cloud_polling",
+    "issue_tracker": "https://github.com/yohaybn/HomeAssistant-israeli_tv/issues",
+    "requirements": [],
+    "version": "1.0.0"
+    
 }
