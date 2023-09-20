@@ -8,7 +8,10 @@ Installation via [HACS](https://hacs.xyz/) (recommended) or by copying files to 
 
 The component requires configuration via the Home Assistant configuration file. The following parameters are required:
 
+    # Example configuration.yaml entry
+    ...
     israeli_tv:
+    ...
 
 ## Services
 
