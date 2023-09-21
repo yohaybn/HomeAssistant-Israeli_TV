@@ -1,18 +1,43 @@
-play_galatz_news:
-  name: Play the Galatz lastest hourly news
-  description: Choose media player and start the Galatz lastest hourly news
-  target:
-    entity:
-      domain: media_player
 play_channel_11:
   name: Play Channel 11
-  description: Choose media player and start the Galatz lastest hourly news
+  description: Choose media player and start Channel 11
   target:
     entity:
       domain: media_player
 play_channel_12:
   name: Play Channel 12
-  description: Choose media player and start the Galatz lastest hourly news
+  description: Choose media player and start Channel 12
   target:
     entity:
       domain: media_player
+
+play_channel_13:
+  name: Play Channel 13
+  description: Choose media player and start Channel 13
+  target:
+    entity:
+      domain: media_player
+play_channel_14:
+  name: Play Channel 14
+  description: Choose media player and start Channel 14
+  target:
+    entity:
+      domain: media_player
+play_custom_channel:
+  name: Play Custome Channel
+  description: Choose media player and URL and play it
+  target:
+    entity:
+      domain: media_player
+  fields:
+    # Key of the field
+    url:
+      # Whether or not field is required (default = false)
+      required: false
+      # Example value that can be passed for this field
+      example: "https://kan11.media.kan.org.il/hls/live/2024514/2024514/master.m3u8"
+    channel_name:
+      # Whether or not field is required (default = false)
+      required: false
+      # Example value that can be passed for this field
+      example: "ספורט 5"
