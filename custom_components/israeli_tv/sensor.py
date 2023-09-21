@@ -72,7 +72,7 @@ async def async_setup_platform(
         entities.append(ChannelSensor("channel 12", guide.get_channel("ערוץ 12")))
         entities.append(ChannelSensor("channel 13", guide.get_channel("ערוץ 13")))
         entities.append(ChannelSensor("channel 14", guide.get_channel("ערוץ 14")))
-        channels = hass.data[DOMAIN]["channels"]
+        channels = hass.data[DOMAIN].get("channels")
         if channels is not None:
             for channel in channels:
                 entities.append(
