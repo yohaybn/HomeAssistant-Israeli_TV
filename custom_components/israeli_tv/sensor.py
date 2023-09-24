@@ -64,7 +64,7 @@ async def async_setup_platform(
 
     if guide is not None and guide.is_need_to_update():
         _LOGGER.debug("updating the guide")
-        guide = fetch_guide(hass)
+        guide = await fetch_guide(hass)
 
     entities = []
     if guide is not None:
