@@ -29,6 +29,8 @@ get_channel_url:
   description: get_channel_url
   fields:
     channel_name:
+      name: "channel name"
+      description: "the name of the channel (for custome channels use the the sensor_name)"
       example: "channel_11"
 play_custom_channel:
   name: Play Custome Channel
@@ -37,14 +39,14 @@ play_custom_channel:
     entity:
       domain: media_player
   fields:
-    # Key of the field
     url:
-      # Whether or not field is required (default = false)
+      name: "URL"
+      description: use URL or channel name
       required: false
-      # Example value that can be passed for this field
       example: "https://kan11.media.kan.org.il/hls/live/2024514/2024514/master.m3u8"
     channel_name:
-      # Whether or not field is required (default = false)
+
       required: false
-      # Example value that can be passed for this field
       example: "kan_kids"
+      name: "channel name"
+      description: "use URL or channel name"
