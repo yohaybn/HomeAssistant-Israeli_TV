@@ -63,7 +63,7 @@ async def async_setup(hass, config):
                 (
                     channel
                     for channel in config[DOMAIN]["channels"]
-                    if channel["name"] == name
+                    if channel["sensor_name"] == name
                 ),
                 None,
             )
