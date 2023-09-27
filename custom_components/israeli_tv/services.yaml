@@ -23,13 +23,20 @@ play_channel_14:
   target:
     entity:
       domain: media_player
+
+get_channel_url:
+  name: get_channel_url
+  description: get_channel_url
+  data:
+    channel_name:
+      example: "channel_11"
 play_custom_channel:
   name: Play Custome Channel
   description: Choose media player and URL and play it
   target:
     entity:
       domain: media_player
-  fields:
+  data:
     # Key of the field
     url:
       # Whether or not field is required (default = false)
