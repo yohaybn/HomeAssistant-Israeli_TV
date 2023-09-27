@@ -27,7 +27,7 @@ play_channel_14:
 get_channel_url:
   name: get_channel_url
   description: get_channel_url
-  data:
+  fields:
     channel_name:
       example: "channel_11"
 play_custom_channel:
@@ -36,7 +36,7 @@ play_custom_channel:
   target:
     entity:
       domain: media_player
-  data:
+  fields:
     # Key of the field
     url:
       # Whether or not field is required (default = false)
@@ -47,4 +47,4 @@ play_custom_channel:
       # Whether or not field is required (default = false)
       required: false
       # Example value that can be passed for this field
-      example: "ספורט 5"
+      example: "kan_kids"
