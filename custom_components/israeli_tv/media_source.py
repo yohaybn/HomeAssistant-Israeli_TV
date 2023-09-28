@@ -46,9 +46,7 @@ class IsraeliTVMediaSource(MediaSource):
         if stations is None:
             raise Unresolvable("Israeli TV Browser not initialized")
 
-        return PlayMedia(
-            stations.get(item.identifier).url, "application/vnd.apple.mpegurl"
-        )
+        return PlayMedia(stations.get(item.identifier).url, item.media_content_type)
 
     async def async_browse_media(
         self,
@@ -73,17 +71,18 @@ class IsraeliTVMediaSource(MediaSource):
         items: list[BrowseMediaSource] = []
 
         for station in self.stations:
-            items.append(
-                BrowseMediaSource(
-                    domain=DOMAIN,
-                    identifier=station,
-                    media_class=MediaClass.MUSIC,
-                    media_content_type="application/vnd.apple.mpegurl",
-                    title=self.stations[station].name,
-                    can_play=True,
-                    can_expand=False,
-                    thumbnail=self.stations[station].thumbnail,
+            if station.url is not None:
+                items.append(
+                    BrowseMediaSource(
+                        domain=DOMAIN,
+                        identifier=station,
+                        media_class=MediaClass.MUSIC,
+                        media_content_type="application/vnd.apple.mpegurl",
+                        title=self.stations[station].name,
+                        can_play=True,
+                        can_expand=False,
+                        thumbnail=self.stations[station].thumbnail,
+                    )
                 )
-            )
 
         return items
