@@ -3,6 +3,7 @@ from datetime import datetime, date, timedelta
 from bs4 import BeautifulSoup
 
 from pytz import timezone
+from types import SimpleNamespace
 
 
 class Programme:
@@ -46,6 +47,53 @@ class Channel:
             ret[programme.start_hour] = (
                 "{ " + f'"title":{programme.title },"desc":  {programme.desc}  ' + " }"
             )
+        return ret
+
+    def get_programmes_from_now_by_start(self) -> dict[str, str]:
+        ret = {}
+        tz = timezone("Asia/Jerusalem")
+        now = datetime.now(tz)
+        for programme in self._programmes:
+            if programme._start >= now:
+                ret[programme.start_hour] = (
+                    "{ "
+                    + f'"title":{programme.title },"desc":  {programme.desc}  '
+                    + " }"
+                )
+        return ret
+
+    def get_programmes_for_today(self) -> dict[str, str]:
+        ret = {}
+        tz = timezone("Asia/Jerusalem")
+        now = datetime.now(tz)
+        for programme in self._programmes:
+            if (
+                programme._start >= now
+                and programme._start.date() == datetime.today().date()
+            ):
+                ret[programme.start_hour] = (
+                    "{ "
+                    + f'"title":{programme.title },"desc":  {programme.desc}  '
+                    + " }"
+                )
+        return ret
+
+    def get_programmes_per_day(self) -> dict[str, str]:
+        ret = {}
+        ret["today"] = {}
+        ret["tommorrow"] = {}
+        tz = timezone("Asia/Jerusalem")
+        now = datetime.now(tz)
+        for programme in self._programmes:
+            if programme._start >= now:
+                if programme._start.date() == datetime.today().date():
+                    ret["today"][programme.start_hour] = SimpleNamespace(
+                        title=programme.title, desc=programme.desc
+                    )
+                else:
+                    ret["tommorrow"][programme.start_hour] = SimpleNamespace(
+                        title=programme.title, desc=programme.desc
+                    )
         return ret
 
     def get_current_programme(self) -> Programme:
