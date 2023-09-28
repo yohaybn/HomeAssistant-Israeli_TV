@@ -60,17 +60,19 @@ async def async_setup_platform(
 
     entities = []
     if guide is not None:
-        entities.append(ChannelSensor("channel 11", guide.get_channel("ערוץ 11")))
-        entities.append(ChannelSensor("channel 12", guide.get_channel("ערוץ 12")))
-        entities.append(ChannelSensor("channel 13", guide.get_channel("ערוץ 13")))
-        entities.append(ChannelSensor("channel 14", guide.get_channel("ערוץ 14")))
+        entities.append(ChannelSensor(hass, "channel 11", guide.get_channel("ערוץ 11")))
+        entities.append(ChannelSensor(hass, "channel 12", guide.get_channel("ערוץ 12")))
+        entities.append(ChannelSensor(hass, "channel 13", guide.get_channel("ערוץ 13")))
+        entities.append(ChannelSensor(hass, "channel 14", guide.get_channel("ערוץ 14")))
         channels = hass.data[DOMAIN].get("channels")
         if channels is not None:
             for channel in channels:
                 if channel["sensor_name"] is not None:
                     entities.append(
                         ChannelSensor(
-                            channel["sensor_name"], guide.get_channel(channel["name"])
+                            hass,
+                            channel["sensor_name"],
+                            guide.get_channel(channel["name"]),
                         )
                     )
     async_add_entities(entities, True)
@@ -104,13 +106,14 @@ class ChannelSensor(SensorEntity):
 
     _attr_icon: str = ICON
 
-    def __init__(self, name, data) -> None:
+    def __init__(self, hass, name, data) -> None:
         """Initialize the sensor."""
         _LOGGER.debug("ChannelSensor __init__ start")
         self._data = data
-        self._attributes: data.get_programmes()
+        self._attributes: {}  # data.get_programmes_per_day()
         self._state: data.get_current_programme().title
         self._attr_name = f"israeli_tv_{name}"
+        self._hass = hass
 
     @property
     def unique_id(self) -> str | None:
@@ -126,7 +129,10 @@ class ChannelSensor(SensorEntity):
 
     @property
     def extra_state_attributes(self) -> dict[str, str]:
-        ret = self._data.get_programmes_per_day()
+        if self._hass.data[DOMAIN].get("full_schedule"):
+            ret = self._data.get_programmes_per_day()
+        else:
+            ret = self._data.get_programmes_for_today()
         ret["desc"] = self._data.get_current_programme().desc
         return ret
 
