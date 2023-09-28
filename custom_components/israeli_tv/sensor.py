@@ -1,11 +1,10 @@
-"""Support for  aliexpress_package_tracker."""
+"""Support for  IsraeliTV."""
 from __future__ import annotations
 import logging
 from typing import Final
 
 import os
-from datetime import datetime
-from .guide_classes import Guide, Channel, Programme
+from .guide_classes import Guide
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 
@@ -15,25 +14,17 @@ from homeassistant.components.sensor import (
     PLATFORM_SCHEMA as BASE_PLATFORM_SCHEMA,
     SensorEntity,
 )
-from homeassistant.const import CONF_NAME
-from homeassistant.core import HomeAssistant, ServiceCall
-from homeassistant.helpers import entity_registry
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
-import homeassistant.helpers.config_validation as cv
+from homeassistant.core import HomeAssistant
 from homeassistant.helpers.dispatcher import (
     async_dispatcher_connect,
     async_dispatcher_send,
 )
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
-from homeassistant.util import Throttle
 import aiohttp
 from .const import (
-    DEFAULT_NAME,
     DOMAIN,
     ICON,
-    MIN_TIME_BETWEEN_UPDATES,
-    CONF_LANG,
     UPDATE_TOPIC,
 )
 
@@ -42,7 +33,7 @@ _LOGGER: Final = logging.getLogger(__name__)
 
 
 _GUIDE_URL = "https://www.bevy.be/bevyfiles/israelpremium.xml"
-_GUIDE_FILE = os.path.join(os.path.dirname(__file__), "israelpremium.xml")
+_GUIDE_FILE = os.path.join(os.path.dirname(__file__), "userfiles/israelpremium.xml")
 
 
 async def async_setup_platform(
@@ -60,6 +51,7 @@ async def async_setup_platform(
         guide = Guide(content)
     else:
         _LOGGER.debug("fetching the guide first time")
+        os.makedirs(os.path.dirname(_GUIDE_FILE), exist_ok=True)
         guide = await fetch_guide(hass)
 
     if guide is not None and guide.is_need_to_update():
@@ -75,15 +67,16 @@ async def async_setup_platform(
         channels = hass.data[DOMAIN].get("channels")
         if channels is not None:
             for channel in channels:
-                entities.append(
-                    ChannelSensor(
-                        channel["sensor_name"], guide.get_channel(channel["name"])
+                if channel["sensor_name"] is not None:
+                    entities.append(
+                        ChannelSensor(
+                            channel["sensor_name"], guide.get_channel(channel["name"])
+                        )
                     )
-                )
     async_add_entities(entities, True)
 
 
-async def fetch_guide(hass) -> Guide:
+async def fetch_guide(hass: HomeAssistant) -> Guide:
     session = async_get_clientsession(hass)
     guide = None
     try:
@@ -133,7 +126,9 @@ class ChannelSensor(SensorEntity):
 
     @property
     def extra_state_attributes(self) -> dict[str, str]:
-        return self._data.get_programmes_by_start()
+        ret = self._data.get_programmes_per_day()
+        ret["desc"] = self._data.get_current_programme().desc
+        return ret
 
     async def async_added_to_hass(self) -> None:
         """Register callbacks."""
