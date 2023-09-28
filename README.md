@@ -1,5 +1,8 @@
 # HomeAssistant-Israeli_TV
-HomeAssistant integration for Israeli TV channels
+HomeAssistant integration for Israeli TV channels.
+
+The integration will create Media Source and services to play Israeli channels. also television programming will be provided in sensors.
+
 ## Installation
 
 Installation via [HACS](https://hacs.xyz/) (recommended) or by copying  `custom_components/israeli_tv` into your Home Assistant configuration directory.
@@ -11,7 +14,8 @@ The component requires configuration via the Home Assistant configuration file. 
     # Example configuration.yaml entry
     ...
     israeli_tv:
-        use_defaults: false #optinal- default = true 
+        use_defaults: true #optinal- default = true 
+        full_schedule: false #optinal- default = false 
         channels: #optinal
           - name: "כאן חינוכית"
             sensor_name: "kan_kids"
@@ -31,10 +35,11 @@ To create sensors with television programming for the channels add
 | Name | Type | Default |  Description |
 | --- | --- | --- | --- | 
 | `use_defaults` | bool | true |  create sensors and services for israeli channels (11-14) |
+| `full_schedule` | bool | false |  add full schedule to attributes (2 days). can create issues with recorder (`exceed maximum size of 16384 bytes. This can cause database performance issues; Attributes will not be stored`) |
 | `channels` | channel array | optional | additional channels to use with services and media source  |
 | `name` | string | **required** | name of channel as found [here](https://www.bevy.be/bevyfiles/israelpremium.xml.txt)   |
 | `sensor_name` | string | **required** |  name for programming sensor |
-| `url` | string | **required** | m3u8 url that you provide |
+| `url` | string | optional | m3u8 url that you provide. if not provided- just sensor will be created, but not media source |
 | `thumbnail` | string | optional | thumbnail url that you provide for media source icon |
 
 
@@ -81,6 +86,21 @@ The following services are implemented by the component:
   mode: single
 ```
 
+## television programming lovelace card example
+```
+type: markdown
+content: |
+
+  {% for time in states.sensor.israeli_tv_channel_13.attributes.today -%}
+    {% set program=states.sensor.israeli_tv_channel_13.attributes.today[time] %}
+     <details>  
+     <summary>{{time}}: {{ program.title}}</summary>
+      {{ program.desc}}
+    </details>
+   {%- endfor %}.
+title: שידורים להיום
+
+```
 ## TODO
 
 - Add more cahnnels.
