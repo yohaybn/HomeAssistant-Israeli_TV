@@ -1,5 +1,6 @@
 {
     "name": "Israeli TV",
     "country": "IL",
-    "render_readme": true
+    "render_readme": true,
+    "persistent_directory": "userfiles"
   }
