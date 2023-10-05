@@ -5,6 +5,9 @@ The integration will create Media Source and services to play Israeli channels. 
 
 ## Installation
 
+[![My Home Assistant](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?repository=HomeAssistant-Israeli_TV&owner=yohaybn&category=Plugin)
+
+
 Installation via [HACS](https://hacs.xyz/) (recommended) or by copying  `custom_components/israeli_tv` into your Home Assistant configuration directory.
 
 ## Configuration
