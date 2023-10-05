@@ -71,7 +71,7 @@ class IsraeliTVMediaSource(MediaSource):
         items: list[BrowseMediaSource] = []
 
         for station in self.stations:
-            if station.url is not None:
+            if self.stations[station].url is not None:
                 items.append(
                     BrowseMediaSource(
                         domain=DOMAIN,
