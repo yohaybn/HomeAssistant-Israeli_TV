@@ -4,7 +4,9 @@ from bs4 import BeautifulSoup
 
 from pytz import timezone
 from types import SimpleNamespace
+import logging
 
+_LOGGER = logging.getLogger(__name__)
 
 class Programme:
     def __init__(self, start, stop, title, desc) -> None:
@@ -146,8 +148,12 @@ class Guide:
 
     def is_need_to_update(self) -> bool:
         """check if need to take new guide from web. (take once a day- guide is for 2 days)"""
-        channel = self._channels[0]
-        return (
-            channel._programmes[-1]._start.date()
-            != (datetime.today() + timedelta(days=1)).date()
-        )
+        channel = next(channel for channel in self._channels if channel._programmes) 
+        if channel._programmes:
+            return (
+                channel._programmes[-1]._start.date()
+                != (datetime.today() + timedelta(days=1)).date()
+            )
+        _LOGGER.error(f"{channel._name} has no programmes")
+        _LOGGER.debug(f"{self._channels} has no programmes")
+        return True
