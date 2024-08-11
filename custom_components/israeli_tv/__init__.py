@@ -32,8 +32,15 @@ async def async_setup(hass, config):
         _LOGGER.debug("get_channel_12_url")
         try:
             session = async_get_clientsession(hass)
+            headers = {
+                'Content-Length': '0',
+                'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Mobile/15E148 Safari/604.1',
+                'Accept': 'application/json'
+            }
+            
             async with session.post(
-                "https://mass.mako.co.il/ClicksStatistics/entitlementsServicesV2.jsp?et=gt&lp=/hls/live/512033/CH2LIVE_HIGH/index.m3u8&rv=AKAMAI"
+                "https://mass.mako.co.il/ClicksStatistics/entitlementsServicesV2.jsp?et=gt&lp=/hls/live/512033/CH2LIVE_HIGH/index.m3u8&rv=AKAMAI",
+                headers=headers
             ) as response:
                 src = await response.text()
                 _LOGGER.debug("async_setup json: %s", json.loads(src)["tickets"])
