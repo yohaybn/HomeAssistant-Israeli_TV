@@ -6,6 +6,7 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from radios import FilterBy, Order, RadioBrowser, Station
 import json
 import aiohttp
+from .channel12 import async_get_channel_12_url
 from .const import DOMAIN
 from homeassistant.core import (
     HomeAssistant,
@@ -27,27 +28,10 @@ async def async_setup(hass, config):
     _LOGGER.debug("async_setup")
     hass.data[DOMAIN] = config[DOMAIN]
 
-    async def get_channel_12_url() -> str:
-        """Handle the service call."""
+    async def get_channel_12_url() -> str | None:
+        """Return a Channel 12 stream URL, or None if it is unavailable."""
         _LOGGER.debug("get_channel_12_url")
-        try:
-            session = async_get_clientsession(hass)
-            headers = {
-                'Content-Length': '0',
-                'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Mobile/15E148 Safari/604.1',
-                'Accept': 'application/json'
-            }
-            
-            async with session.post(
-                "https://mass.mako.co.il/ClicksStatistics/entitlementsServicesV2.jsp?et=gt&lp=/hls/live/512033/CH2LIVE_HIGH/index.m3u8&rv=AKAMAI",
-                headers=headers
-            ) as response:
-                src = await response.text()
-                _LOGGER.debug("async_setup json: %s", json.loads(src)["tickets"])
-                url = f'https://mako-streaming.akamaized.net/stream/hls/live/2033791/k12dvr/index.m3u8?{json.loads(src)["tickets"][0]["ticket"]}'
-                return url
-        except aiohttp.ClientError as error:
-            _LOGGER.error("Error while retrieving channel 12 URL: %s", error)
+        return await async_get_channel_12_url(async_get_clientsession(hass))
 
     def play_cahnnel(media_player, url):
         """play_cahnnel"""
@@ -89,10 +73,14 @@ async def async_setup(hass, config):
         """Handle the service call."""
         _LOGGER.debug("play_channel_12")
         media_player_entity_id = call.data.get("entity_id")
+        url = await get_channel_12_url()
+        if url is None:
+            _LOGGER.error("Channel 12 URL is unavailable, not playing")
+            return
 
         service_data = {
             "entity_id": media_player_entity_id,
-            "media_content_id": await get_channel_12_url,
+            "media_content_id": url,
             "media_content_type": "video",
         }
         _LOGGER.debug(service_data)
@@ -153,7 +141,8 @@ async def async_setup(hass, config):
         _LOGGER.debug("get_channel_url")
         await sync_stations()
         channel_no = call.data.get("channel_name")
-        return {"url": hass.data[DOMAIN]["stations"].get(channel_no).url}
+        station = hass.data[DOMAIN]["stations"].get(channel_no)
+        return {"url": station.url if station else None}
 
     # return hass.data[DOMAIN].get(channel_no)
 
